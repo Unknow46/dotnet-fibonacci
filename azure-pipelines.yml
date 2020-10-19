@@ -28,7 +28,8 @@ steps:
     cliProjectKey: 'Unknow46_dotnet-fibonacci'
     cliProjectName: 'dotnet-fibonacci'
     cliSources: '.'
-
+    extraProperties: |
+      sonar.cs.opencover.reportsPaths=**/opencover.xml
 
 - task: DotNetCoreCLI@2
   inputs:

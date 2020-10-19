@@ -18,6 +18,20 @@ steps:
     packageType: 'sdk'
     version: '3.1.402'
     includePreviewVersions: true
+
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'dotnet-fibonacci'
+    organization: 'unknow46'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'Unknow46_dotnet-fibonacci'
+    cliProjectName: 'dotnet-fibonacci'
+    cliSources: '.'
+    extraProperties: |
+        sonar.exclusions=**/*.spec.ts,**/*.spec.tsx,**/*.stories.tsx,**/coverage/**,Scripts/**,**/*.scss,**/__snapshots__/**,**/*[Tt]ests.cs,**/node_modules/**,**/ClientApp/build/**,**/ClientApp/.storybook/**,**/obj/**,**/__mocks__/**,**/ClientApp/src/serviceWorker.ts
+        sonar.cs.opencover.reportsPaths=**/opencover.xml
+
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
@@ -30,6 +44,10 @@ steps:
     publishWebProjects: false
     projects: '**/Demo_two/Demo_two.csproj'
     arguments: '-r win-x64 --self-contained=true /p:PublishSingleFile=true /p:IncludeNativeLibrariesInSingleFile=true --output $(Build.ArtifactStagingDirectory)'
+- task: SonarCloudAnalyze@1
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'

@@ -28,7 +28,7 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: false
-    projects: '**/Demo.csproj'
+    projects: '**/Demo_two/Demo_two.csproj'
     arguments: '-r win-x64 --self-contained=true /p:PublishSingleFile=true /p:IncludeNativeLibrariesInSingleFile=true --output $(Build.ArtifactStagingDirectory)'
 - task: PublishBuildArtifacts@1
   inputs:

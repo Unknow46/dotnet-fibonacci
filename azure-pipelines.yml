@@ -21,8 +21,9 @@ steps:
       projects: '**/*Tests.csproj'
       arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage/opencover.xml'
       publishTestResults: false
-  - task: DownloadBuildArtifacts@0
-    inputs:
-      buildType: 'current'
-      downloadType: 'single'
-      downloadPath: '$(System.ArtifactsDirectory)/Demo'
+      
+  - task: PublishBuildArtifacts@1
+    inputs:​
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'

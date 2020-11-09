@@ -7,15 +7,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fibonacci
 {
-    public static class Compute
+    public class Compute
     {
+        private readonly FibonacciDataContext _fibonacciDataContext;
+
+        public Compute(FibonacciDataContext fibonacciDataContext)
+        {
+            _fibonacciDataContext = fibonacciDataContext;
+        }
+
         public static int Fib(int i)
         {
             if (i <= 2) return 1;
             return Fib(i - 2) + Fib(i - 1);
         }
 
-        public static async Task<IList<int>> Execute(string[] args)
+        public async Task<IList<int>> Execute(string[] args)
         {
             var results = new List<int>();
             using (var fibonacciDataContext = new FibonacciDataContext())
@@ -24,7 +31,7 @@ namespace Fibonacci
                 foreach (var arg in args)
                 {
                     var i = int.Parse(arg);
-                    var output = await fibonacciDataContext.TFibonacci.Where(f => f.FibInput == i).Select(f => f.FibOutput).FirstOrDefaultAsync();
+                    var output = await _fibonacciDataContext.TFibonacci.Where(f => f.FibInput == i).Select(f => f.FibOutput).FirstOrDefaultAsync();
                     Task<int> task;
                     if (output == default)
                     {
@@ -42,14 +49,14 @@ namespace Fibonacci
                     var indexOf = tasks.IndexOf(task);
                     var arg = args[indexOf];
                     results.Add(task.Result);
-                    fibonacciDataContext.TFibonacci.Add(new TFibonacci()
+                    _fibonacciDataContext.TFibonacci.Add(new TFibonacci()
                     {
                         FibInput = int.Parse(arg),
                         FibOutput = task.Result,
                         FibCreatedTimeStamp = DateTime.Now
                     });
                 }
-                await fibonacciDataContext.SaveChangesAsync();
+                await _fibonacciDataContext.SaveChangesAsync();
                 return results;
             }
         }
